@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Log Your Mood</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="POST" action="{{ url_for('main.log_mood') }}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="mood_score" class="form-label">How are you feeling today? (1-10)</label>
+                            <input type="range" class="form-range" min="1" max="10" id="mood_score" name="mood_score" required>
+                            <div class="d-flex justify-content-between">
+                                <span>Very Low</span>
+                                <span>Excellent</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Additional Notes (Optional)</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Describe your feelings or what's on your mind..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Save Mood Entry</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

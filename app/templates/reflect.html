@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card reflection-form">
+                <div class="card-body">
+                    <div class="progress mb-4">
+                        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+
+                    <form id="reflectionForm" class="needs-validation" novalidate>
+                        <div class="reflection-step active" data-step="1">
+                            <h3 class="text-center mb-4">What's one thing you managed well today?</h3>
+                            <div class="form-group">
+                                <textarea class="form-control" name="achievement_1" rows="3" required></textarea>
+                                <div class="invalid-feedback">Please share an achievement.</div>
+                            </div>
+                            <button type="button" class="btn btn-primary w-100 mt-3 next-btn">Next</button>
+                        </div>
+
+                        <div class="reflection-step" data-step="2">
+                            <h3 class="text-center mb-4">What's another achievement from today?</h3>
+                            <div class="form-group">
+                                <textarea class="form-control" name="achievement_2" rows="3" required></textarea>
+                                <div class="invalid-feedback">Please share another achievement.</div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                                <button type="button" class="btn btn-primary next-btn">Next</button>
+                            </div>
+                        </div>
+
+                        <div class="reflection-step" data-step="3">
+                            <h3 class="text-center mb-4">Share one final achievement from today:</h3>
+                            <div class="form-group">
+                                <textarea class="form-control" name="achievement_3" rows="3" required></textarea>
+                                <div class="invalid-feedback">Please share a final achievement.</div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                                <button type="submit" class="btn btn-success">Complete</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('reflectionForm');
+    const steps = document.querySelectorAll('.reflection-step');
+    const progressBar = document.querySelector('.progress-bar');
+    let currentStep = 1;
+
+    function updateProgress() {
+        const progress = ((currentStep - 1) / (steps.length - 1)) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function showStep(step) {
+        steps.forEach(s => s.classList.remove('active'));
+        document.querySelector(`[data-step="${step}"]`).classList.add('active');
+        currentStep = step;
+        updateProgress();
+    }
+
+    document.querySelectorAll('.next-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const currentStepEl = document.querySelector(`[data-step="${currentStep}"]`);
+            const textarea = currentStepEl.querySelector('textarea');
+            
+            if (textarea.value.trim() === '') {
+                textarea.classList.add('is-invalid');
+                return;
+            }
+            
+            if (currentStep < steps.length) {
+                showStep(currentStep + 1);
+            }
+        });
+    });
+
+    document.querySelectorAll('.prev-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            achievement_1: form.achievement_1.value,
+            achievement_2: form.achievement_2.value,
+            achievement_3: form.achievement_3.value
+        };
+
+        fetch('/submit_reflection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/dashboard';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error saving your reflection. Please try again.');
+        });
+    });
+});
+</script>
+
+<style>
+.reflection-step {
+    display: none;
+}
+
+.reflection-step.active {
+    display: block;
+}
+
+.reflection-form {
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.progress {
+    height: 8px;
+    background-color: #f0f0f0;
+}
+
+.progress-bar {
+    background-color: #28a745;
+    transition: width 0.3s ease;
+}
+
+textarea {
+    resize: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+textarea:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.btn {
+    padding: 10px 20px;
+    font-weight: 500;
+}
+</style>
+{% endblock %}

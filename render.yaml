@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: daily-reflections
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: SECRET_KEY
+        generateValue: true

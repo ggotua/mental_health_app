@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center mb-0">Edit Reflection</h2>
+                    <p class="text-center text-muted mb-0 mt-2">
+                        {{ reflection.date.strftime('%B %d, %Y') }}
+                    </p>
+                </div>
+                <div class="card-body">
+                    <form id="editReflectionForm">
+                        <div class="mb-4">
+                            <label class="form-label">Achievement 1</label>
+                            <textarea class="form-control" name="achievement_1" rows="3" required>{{ reflection.achievement_1 }}</textarea>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Achievement 2</label>
+                            <textarea class="form-control" name="achievement_2" rows="3" required>{{ reflection.achievement_2 }}</textarea>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Achievement 3</label>
+                            <textarea class="form-control" name="achievement_3" rows="3" required>{{ reflection.achievement_3 }}</textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+textarea {
+    resize: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+textarea:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editReflectionForm');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            achievement_1: form.achievement_1.value,
+            achievement_2: form.achievement_2.value,
+            achievement_3: form.achievement_3.value
+        };
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '{{ url_for("main.dashboard") }}';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error updating your reflection. Please try again.');
+        });
+    });
+});
+</script>
+{% endblock %}

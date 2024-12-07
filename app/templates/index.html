@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row align-items-center min-vh-75">
+        <div class="col-md-6">
+            <h1 class="display-4 mb-4">Track Your Daily Achievements</h1>
+            <p class="lead mb-4">Take a moment each day to reflect on your accomplishments, no matter how small. Build confidence and resilience through daily reflection.</p>
+            
+            {% if not current_user.is_authenticated %}
+            <div class="d-grid gap-3 d-md-flex">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Get Started</a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-lg">Login</a>
+            </div>
+            {% else %}
+            <div class="d-grid gap-3 d-md-flex">
+                <a href="{{ url_for('main.reflect') }}" class="btn btn-primary btn-lg">Start Today's Reflection</a>
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary btn-lg">View Dashboard</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <div class="card features-card">
+                <div class="card-body">
+                    <h3 class="card-title">Why Daily Reflections?</h3>
+                    <ul class="list-unstyled feature-list">
+                        <li>
+                            <span class="feature-icon">✨</span>
+                            <strong>Build Self-Awareness</strong>
+                            <p>Recognize your daily accomplishments and progress</p>
+                        </li>
+                        <li>
+                            <span class="feature-icon">📈</span>
+                            <strong>Track Progress</strong>
+                            <p>See your growth over time with a beautiful timeline view</p>
+                        </li>
+                        <li>
+                            <span class="feature-icon">🎯</span>
+                            <strong>Stay Motivated</strong>
+                            <p>Build confidence by acknowledging your achievements</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.features-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-list li {
+    margin-bottom: 1.5rem;
+    padding-left: 2.5rem;
+    position: relative;
+}
+
+.feature-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.5rem;
+}
+
+.feature-list li strong {
+    display: block;
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+}
+
+.feature-list li p {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
