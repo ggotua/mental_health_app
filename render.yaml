@@ -1,11 +1,13 @@
-services:
-  - type: web
-    name: daily-reflections
-    env: python
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn app:app"
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.12
-      - key: SECRET_KEY
-        generateValue: true
+services: 
+  - type: web 
+    name: daily-reflections 
+    env: python 
+    buildCommand: "./build.sh" 
+    startCommand: "gunicorn wsgi:application" 
+    envVars: 
+      - key: PYTHON_VERSION 
+        value: 3.11.11 
+      - key: SECRET_KEY 
+        generateValue: true 
+      - key: FLASK_ENV 
+        value: production 
